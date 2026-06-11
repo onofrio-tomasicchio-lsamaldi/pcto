@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boolean - Tomasicchio Onofrio</title>
+  <link href="https://fonts.cdnfonts.com/css/codec-pro" rel="stylesheet" />
+  <style>
+    :root {
+      --dark:  #0a1622;
+      --white: #ffffff;
+      --gold:  #DBBD6F;
+      --gold-dim: rgba(219,189,111,0.12);
+      --nav-blur: blur(18px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    /* ── CURSORE PERSONALIZZATO (Stili) ── */
+    body, a, button, .interactive-hover { cursor: none; }
+
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      background-color: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s cubic-bezier(0.25, 1, 0.5, 1), height 0.25s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease, border 0.25s ease;
+    }
+
+    .custom-cursor.hover {
+      width: 45px;
+      height: 45px;
+      background-color: rgba(219, 189, 111, 0.1);
+      border: 1px solid var(--gold);
+    }
+
+    .cursor-ripple {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: transparent;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      animation: ripple-expansion 0.45s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    }
+
+    @keyframes ripple-expansion {
+      0% { width: 6px; height: 6px; opacity: 1; border-width: 2px; }
+      100% { width: 65px; height: 65px; opacity: 0; border-width: 1px; }
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .custom-cursor { display: none; }
+      body, a, button, .interactive-hover { cursor: auto; }
+    }
+
+    body {
+      font-family: 'Codec Pro', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 200;
+      padding: 22px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: var(--nav-blur); -webkit-backdrop-filter: var(--nav-blur);
+      background: rgba(10,22,34,0.72);
+    }
+    .nav-back {
+      color: var(--gold); text-decoration: none;
+      font-size: clamp(10px,0.85vw,14px); font-weight: 600;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 8px;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 0.7; }
+    .nav-title {
+      font-size: clamp(10px,0.85vw,14px); font-weight: 600;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--white); opacity: 0.45;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: clamp(80px,10vw,160px) clamp(30px,6vw,120px) clamp(60px,7vw,110px);
+    }
+    .hero-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 130%;
+      object-fit: cover;
+      z-index: 0;
+      top: -15%;
+      will-change: transform;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: rgba(10,22,34,0.62);
+      z-index: 1;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: clamp(30px,6vw,120px);
+      width: 1px; height: 38%;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+      z-index: 2;
+    }
+    .hero-content { position: relative; z-index: 3; }
+
+    .hero-eyebrow {
+      font-size: clamp(11px,0.85vw,14px); font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: clamp(18px,2vw,32px);
+      opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
+    }
+    .hero-title {
+      font-size: clamp(40px,6vw,110px); font-weight: 700;
+      line-height: 1.0; letter-spacing: -0.02em;
+      color: var(--white); max-width: 14ch;
+      opacity: 0; animation: fadeUp 0.7s 0.4s forwards;
+    }
+    .hero-title em { font-style: normal; color: var(--gold); }
+    .hero-sub {
+      margin-top: clamp(24px,2.5vw,40px);
+      font-size: clamp(13px,1vw,18px); line-height: 1.75;
+      color: rgba(255,255,255,0.72); max-width: 58ch;
+      opacity: 0; animation: fadeUp 0.7s 0.6s forwards;
+    }
+    .hero-stats {
+      display: flex; gap: clamp(30px,4vw,70px);
+      margin-top: clamp(36px,4vw,64px);
+      opacity: 0; animation: fadeUp 0.7s 0.8s forwards;
+    }
+    .stat { display: flex; flex-direction: column; gap: 4px; }
+    .stat-num {
+      font-size: clamp(28px,3vw,52px); font-weight: 700;
+      color: var(--gold); letter-spacing: -0.02em; line-height: 1;
+    }
+    .stat-label {
+      font-size: clamp(10px,0.75vw,13px); letter-spacing: 0.15em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: clamp(30px,4vw,80px); height: 1px;
+      background: var(--gold); opacity: 0.4;
+      margin: clamp(50px,7vw,110px) clamp(30px,6vw,120px) 0;
+    }
+
+    /* ── SECTIONS ── */
+    .section { padding: clamp(50px,6vw,100px) clamp(30px,6vw,120px); }
+    .section-label {
+      font-size: clamp(10px,0.78vw,13px); font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: clamp(20px,2.5vw,40px);
+    }
+    .section-title {
+      font-size: clamp(24px,2.8vw,52px); font-weight: 700;
+      letter-spacing: -0.01em; line-height: 1.1;
+      color: var(--white); margin-bottom: clamp(24px,2.5vw,44px);
+    }
+    .section-body {
+      font-size: clamp(14px,1.05vw,20px); line-height: 1.85;
+      color: rgba(255,255,255,0.72); max-width: 72ch;
+    }
+    .section-body p + p { margin-top: clamp(14px,1.5vw,24px); }
+
+    .two-col {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(40px,5vw,100px); align-items: start;
+    }
+    .img-slot {
+      width: 100%; aspect-ratio: 4/3;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .img-slot img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .gold-quote {
+      border-left: 3px solid var(--gold);
+      padding: clamp(16px,2vw,28px) clamp(20px,2.5vw,40px);
+      margin: clamp(30px,3.5vw,56px) 0;
+      background: var(--gold-dim);
+      border-radius: 0 4px 4px 0;
+      font-size: clamp(15px,1.15vw,22px); line-height: 1.7;
+      color: rgba(255,255,255,0.85); font-style: italic;
+    }
+
+    /* ── CORSI GRID ── */
+    .corsi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(16px,2vw,32px);
+      margin-top: clamp(24px,2.5vw,44px);
+    }
+    .corso-card {
+      padding: clamp(22px,2.2vw,40px);
+      border: 1px solid rgba(219,189,111,0.2);
+      border-radius: 4px;
+      background: rgba(219,189,111,0.05);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .corso-card:hover {
+      background: rgba(219,189,111,0.10);
+      border-color: rgba(219,189,111,0.45);
+    }
+    .corso-year {
+      font-size: clamp(10px,0.72vw,12px); font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: clamp(8px,0.8vw,14px);
+    }
+    .corso-name {
+      font-size: clamp(15px,1.2vw,22px); font-weight: 700;
+      color: var(--white); margin-bottom: clamp(8px,0.8vw,14px);
+      line-height: 1.2;
+    }
+    .corso-meta {
+      display: flex; gap: clamp(10px,1vw,18px); flex-wrap: wrap;
+      margin-bottom: clamp(12px,1.2vw,20px);
+    }
+    .corso-badge {
+      font-size: clamp(10px,0.72vw,12px); font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px;
+      padding: 3px 10px;
+    }
+    .corso-desc {
+      font-size: clamp(13px,0.95vw,17px); line-height: 1.75;
+      color: rgba(255,255,255,0.62);
+    }
+
+    /* ── TECH PILLS ── */
+    .pills {
+      display: flex; flex-wrap: wrap; gap: clamp(8px,1vw,14px);
+      margin-top: clamp(20px,2.5vw,36px);
+    }
+    .pill {
+      padding: clamp(6px,0.6vw,10px) clamp(14px,1.4vw,24px);
+      border: 1px solid rgba(219,189,111,0.45); border-radius: 999px;
+      font-size: clamp(11px,0.78vw,14px); font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--gold); background: transparent;
+      transition: background 0.2s, color 0.2s;
+    }
+    .pill:hover { background: var(--gold); color: var(--dark); }
+
+    /* ── PRO/CON ── */
+    .procon {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(20px,2.5vw,40px); margin-top: clamp(24px,2.5vw,40px);
+    }
+    .procon-box { padding: clamp(20px,2vw,36px); border-radius: 4px; }
+    .procon-box.pro { background: rgba(219,189,111,0.08); border: 1px solid rgba(219,189,111,0.25); }
+    .procon-box.con { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); }
+    .procon-head {
+      font-size: clamp(10px,0.75vw,13px); font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      margin-bottom: clamp(12px,1.2vw,20px);
+    }
+    .procon-box.pro .procon-head { color: var(--gold); }
+    .procon-box.con .procon-head { color: rgba(255,255,255,0.4); }
+    .procon-body {
+      font-size: clamp(13px,0.95vw,17px); line-height: 1.75;
+      color: rgba(255,255,255,0.68);
+    }
+
+    /* footer */
+    .footer-back {
+      padding: clamp(50px,6vw,100px) clamp(30px,6vw,120px);
+      border-top: 1px solid rgba(219,189,111,0.15);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-back a {
+      color: var(--gold); text-decoration: none;
+      font-size: clamp(11px,0.85vw,15px); font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 10px;
+      transition: opacity 0.2s;
+    }
+    .footer-back a:hover { opacity: 0.7; }
+    .footer-copy {
+      font-size: clamp(10px,0.75vw,13px); letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.2); text-transform: uppercase;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 860px) {
+      .two-col, .procon, .corsi-grid { grid-template-columns: 1fr; }
+      nav { padding: 18px 20px; }
+      .hero { padding: 100px 24px 60px; }
+      .hero::before { left: 24px; }
+      .section { padding: 50px 24px; }
+      .divider { margin-left: 24px; margin-right: 24px; }
+      .footer-back { padding: 50px 24px; flex-direction: column; gap: 20px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="custom-cursor"></div>
+
+  <nav>
+    <a class="nav-back" href="index.html#attivita">← Torna alla home</a>
+    <span class="nav-title">Boolean</span>
+  </nav>
+
+  <section class="hero">
+    <video class="hero-video" src="VIDEO_BOOLEAN.mp4" autoplay muted loop playsinline></video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Attività PCTO · 2023–2024</p>
+      <h1 class="hero-title"><em>Boolean</em></h1>
+      <p class="hero-sub">Formazione e orientamento nel Web Development: quattro corsi, quaranta ore, centinaia di righe di codice e la scoperta di un percorso universitario.</p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">4</span><span class="stat-label">Corsi</span></div>
+        <div class="stat"><span class="stat-num">40</span><span class="stat-label">Ore totali</span></div>
+        <div class="stat"><span class="stat-num">15</span><span class="stat-label">Progetti</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <p class="section-label">Chi è Boolean</p>
+    <h2 class="section-title">L'azienda</h2>
+    <div class="two-col">
+      <div class="section-body">
+        <p>Boolean è una realtà specializzata nella formazione in ambito tecnologico e digitale. I suoi percorsi sono caratterizzati da un approccio pratico e orientato ai progetti, con lezioni online dal vivo, tutor specializzati e docenti che operano direttamente nel settore informatico.</p>
+        <p>L'obiettivo è fornire competenze immediatamente applicabili attraverso la realizzazione di progetti concreti e l'utilizzo delle tecnologie più richieste dal mercato del lavoro.</p>
+        <p>Nel corso del mio percorso scolastico ho partecipato a diversi corsi PCTO organizzati da Boolean, che mi hanno permesso di approfondire lo sviluppo web e di acquisire competenze fondamentali nella programmazione. Queste esperienze hanno avuto un ruolo importante nell'orientare il mio interesse verso l'Ingegneria Informatica.</p>
+      </div>
+      <div class="img-slot">
+        <img src="FOTO_BOOLEAN_1.png" alt="Boolean" />
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <p class="section-label">Percorsi PCTO</p>
+    <h2 class="section-title">I corsi</h2>
+    <div class="corsi-grid">
+
+      <div class="corso-card">
+        <p class="corso-year">2023</p>
+        <p class="corso-name">Coding Week — Arcade Collection</p>
+        <div class="corso-meta">
+          <span class="corso-badge">8 ore</span>
+          <span class="corso-badge">4 lezioni</span>
+          <span class="corso-badge">3 progetti</span>
+        </div>
+        <p class="corso-desc">Primo contatto strutturato con lo sviluppo software. I concetti fondamentali della programmazione sono stati introdotti attraverso HTML, CSS e JavaScript, con cenni a Python e C++. Ogni concetto veniva immediatamente applicato in un progetto concreto. Ha rappresentato la scoperta che il codice può trasformare un'idea in un prodotto funzionante.</p>
+      </div>
+
+      <div class="corso-card">
+        <p class="corso-year">2024</p>
+        <p class="corso-name">Web Development — AI Apps</p>
+        <div class="corso-meta">
+          <span class="corso-badge">8 ore</span>
+          <span class="corso-badge">4 lezioni</span>
+          <span class="corso-badge">3 progetti</span>
+        </div>
+        <p class="corso-desc">Integrazione tra sviluppo web e intelligenza artificiale. Attraverso HTML, CSS, JavaScript e modelli GPT, ho realizzato applicazioni che mostravano come l'IA possa essere incorporata in prodotti digitali reali. Un settore in forte crescita che ha ampliato significativamente la mia visione del possibile.</p>
+      </div>
+
+      <div class="corso-card">
+        <p class="corso-year">2024</p>
+        <p class="corso-name">Web Development — Mobile Apps</p>
+        <div class="corso-meta">
+          <span class="corso-badge">10 ore</span>
+          <span class="corso-badge">5 lezioni</span>
+          <span class="corso-badge">4 progetti</span>
+        </div>
+        <p class="corso-desc">Progettazione e sviluppo di interfacce per dispositivi mobili in HTML, CSS e JavaScript. Il percorso ha messo al centro l'usabilità, il design delle interfacce e l'esperienza dell'utente — aspetti oggi centrali in qualsiasi prodotto digitale di successo.</p>
+      </div>
+
+      <div class="corso-card">
+        <p class="corso-year">2024</p>
+        <p class="corso-name">Web Development — Arcade Mania</p>
+        <div class="corso-meta">
+          <span class="corso-badge">14 ore</span>
+          <span class="corso-badge">7 lezioni</span>
+          <span class="corso-badge">5 progetti</span>
+        </div>
+        <p class="corso-desc">Il percorso più articolato del triennio. Cinque progetti in HTML, CSS e JavaScript che hanno richiesto maggiore autonomia e organizzazione. Ha consolidato le competenze precedenti e sviluppato una sicurezza crescente nell'affrontare problemi di programmazione e nel progettare applicazioni web interattive.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <p class="section-label">Oltre il PCTO</p>
+    <h2 class="section-title">Attività formative extra</h2>
+    <div class="section-body">
+      <p>Oltre ai corsi riconosciuti come PCTO, ho partecipato e continuo a partecipare a numerose attività formative nel settore informatico. In particolare ho approfondito temi legati all'intelligenza artificiale, alla cyber security, all'UX design attraverso Figma e ad altri ambiti della progettazione digitale.</p>
+      <p>Attualmente sto seguendo anche percorsi formativi più avanzati e professionalizzanti dedicati a Python, C++, AI Engineering e altre tecnologie emergenti. Sebbene queste attività non siano state riconosciute come PCTO, hanno contribuito in modo significativo alla mia crescita personale e professionale.</p>
+    </div>
+    <blockquote class="gold-quote">
+      "La realizzazione di questo stesso sito è una diretta conseguenza delle competenze sviluppate durante questi percorsi formativi."
+    </blockquote>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <p class="section-label">Risultati</p>
+    <h2 class="section-title">Competenze acquisite</h2>
+    <div class="two-col">
+      <div>
+        <p class="section-label" style="margin-bottom: clamp(12px,1.2vw,20px);">Tecniche</p>
+        <div class="pills">
+          <span class="pill">HTML</span>
+          <span class="pill">CSS</span>
+          <span class="pill">JavaScript</span>
+          <span class="pill">Python</span>
+          <span class="pill">C++</span>
+          <span class="pill">AI / GPT</span>
+          <span class="pill">UX Design</span>
+          <span class="pill">Figma</span>
+          <span class="pill">Cyber Security</span>
+          <span class="pill">Mobile UI</span>
+        </div>
+      </div>
+      <div>
+        <p class="section-label" style="margin-bottom: clamp(12px,1.2vw,20px);">Trasversali</p>
+        <div class="pills">
+          <span class="pill">Problem Solving</span>
+          <span class="pill">Autonomia</span>
+          <span class="pill">Gestione del tempo</span>
+          <span class="pill">Lavoro per obiettivi</span>
+          <span class="pill">Pensiero logico</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <p class="section-label">Orientamento</p>
+    <h2 class="section-title">Valenza orientativa</h2>
+    <div class="section-body">
+      <p>Queste esperienze hanno avuto un ruolo determinante nella mia scelta universitaria. Grazie ai corsi Boolean ho potuto comprendere concretamente cosa significhi lavorare nel settore informatico e ho maturato la decisione di proseguire gli studi nel campo dell'Ingegneria Informatica presso il Politecnico di Bari.</p>
+      <p>Anche la realizzazione di questo stesso sito rappresenta una diretta conseguenza delle competenze sviluppate durante tali percorsi formativi. Le conoscenze apprese mi hanno consentito di progettare e sviluppare autonomamente una piattaforma web moderna e funzionale.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <p class="section-label">Valutazione</p>
+    <h2 class="section-title">Aspetti positivi e criticità</h2>
+    <div class="procon">
+      <div class="procon-box pro">
+        <p class="procon-head">Punti di forza</p>
+        <p class="procon-body">L'approccio estremamente pratico ha reso ogni concetto immediatamente applicabile. Le lezioni live permettevano il confronto diretto con docenti e tutor. L'accessibilità dei corsi PCTO ha offerto gratuitamente contenuti di qualità elevata e aggiornati rispetto alle tecnologie attualmente richieste dal mercato.</p>
+      </div>
+      <div class="procon-box con">
+        <p class="procon-head">Criticità</p>
+        <p class="procon-body">Personalmente non ho riscontrato particolari criticità. Al contrario, considero questi percorsi tra le esperienze formative più utili dell'intero triennio, sia per le competenze acquisite sia per l'importante contributo all'orientamento delle mie future scelte accademiche e professionali.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer-back">
+    <a href="index.html#attivita">← Torna alla home</a>
+    <span class="footer-copy">Onofrio · Percorso PCTO</span>
+  </footer>
+
+  <script>
+    const cursor = document.querySelector('.custom-cursor');
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('click', (e) => {
+      const ripple = document.createElement('div');
+      ripple.className = 'cursor-ripple';
+      ripple.style.left = e.clientX + 'px';
+      ripple.style.top = e.clientY + 'px';
+      document.body.appendChild(ripple);
+      
+      cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
+      setTimeout(() => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+      }, 90);
+
+      ripple.addEventListener('animationend', () => {
+        ripple.remove();
+      });
+    });
+
+    const interactiveElements = document.querySelectorAll('a, button, .interactive-hover, .pill');
+    
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+    // ── PARALLAX HERO VIDEO ──
+    const heroVideo = document.querySelector('.hero-video');
+    const PARALLAX_SPEED = 0.35; // 0 = si muove con la pagina, 1 = completamente fisso
+
+    window.addEventListener('scroll', () => {
+      heroVideo.style.transform = `translateY(${window.scrollY * PARALLAX_SPEED}px)`;
+    }, { passive: true });
+  </script>
+  </script>
+</body>
+</html>
