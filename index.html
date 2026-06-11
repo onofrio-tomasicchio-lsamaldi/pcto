@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relazione PCTO - Onofrio Tomasicchio</title>
+  <link rel="preconnect" href="https://fonts.cdnfonts.com" />
+  <link href="https://fonts.cdnfonts.com/css/codec-pro" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:    #0a1622;
+      --white: #ffffff;
+      --gold:  #DBBD6F;
+      --font:  'Codec Pro', sans-serif;
+      --accent: #1d82b6;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: var(--font); overflow-x: hidden; cursor: none; }
+    a, button, .interactive-hover { cursor: none; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(20px,5vw,80px);
+      height: clamp(64px,7vw,82px);
+      background: transparent;
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid transparent;
+      transition: background 0.4s, height 0.4s, border-color 0.4s;
+    }
+    nav.nav-scrolled {
+      height: clamp(48px,5vw,60px);
+      background: rgba(10,22,34,0.97);
+      border-bottom-color: rgba(219,189,111,0.18);
+    }
+    .nav-logo {
+      font-size: clamp(13px,1vw,15px); font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none; white-space: nowrap;
+    }
+    .nav-links { display: flex; gap: clamp(16px,2.4vw,40px); list-style: none; align-items: center; }
+    .nav-links a {
+      font-size: clamp(12px,0.9vw,14px); letter-spacing: 0.08em;
+      text-transform: uppercase; font-weight: 600;
+      color: rgba(255,255,255,0.72); text-decoration: none;
+      position: relative; transition: color 0.25s; white-space: nowrap;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px; background: var(--gold); transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: none; background: none; border: none; padding: 4px;
+    }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: 0.3s; }
+
+    /* ── HERO ── */
+    #home { width: 100%; height: 100vh; position: relative; overflow: hidden; background: #0a1622; }
+    #home img.hero-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 115%;
+      object-fit: cover; display: block;
+      will-change: transform;
+    }
+    @keyframes fadeSlideUpHero {
+      0%   { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    #home img.hero-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: contain; display: block; z-index: 1;
+      opacity: 0;
+      animation: fadeSlideUpHero 1.2s cubic-bezier(0.25,0.8,0.25,1) 0.2s forwards;
+    }
+    .scroll-indicator {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; z-index: 10;
+      opacity: 0; animation: fadeInIndicator 1.5s ease 1s forwards;
+    }
+    @keyframes fadeInIndicator { to { opacity: 1; } }
+    .scroll-indicator .scroll-text {
+      color: rgba(255,255,255,0.8); font-size: 13px;
+      letter-spacing: 0.25em; font-weight: 600; margin-bottom: 6px;
+    }
+    .scroll-arrows { display: flex; flex-direction: column; align-items: center; }
+    .chevron {
+      width: 10px; height: 10px;
+      border-right: 2px solid rgba(255,255,255,0.8);
+      border-bottom: 2px solid rgba(255,255,255,0.8);
+      transform: rotate(45deg);
+      animation: chevronCascade 1.5s infinite; opacity: 0;
+    }
+    .chevron:nth-child(1) { animation-delay: 0s; }
+    .chevron:nth-child(2) { animation-delay: 0.15s; margin-top: -3px; }
+    .chevron:nth-child(3) { animation-delay: 0.3s;  margin-top: -3px; }
+    @keyframes chevronCascade {
+      0%   { opacity: 0; transform: translateY(-4px) rotate(45deg); }
+      50%  { opacity: 1; transform: translateY(0)    rotate(45deg); }
+      100% { opacity: 0; transform: translateY(4px)  rotate(45deg); }
+    }
+
+    /* ── COMMON SECTION ELEMENTS ── */
+    .section-eyebrow {
+      display: inline-block; font-size: clamp(11px,0.8vw,13px);
+      letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700;
+      color: var(--gold); position: relative; z-index: 2;
+    }
+    /* eyebrow su sfondo bianco */
+    .on-white .section-eyebrow { color: #d4a744; }
+    .gold-line { width: 48px; height: 2px; background-color: var(--gold); margin: 14px 0 20px; position: relative}
+    .section-title {
+      font-size: clamp(32px,3.8vw,56px); font-weight: 800;
+      line-height: 1.08; letter-spacing: -0.01em; position: relative; z-index: 2;
+    }
+    .section-title em { font-style: normal; color: #1d82b6; }
+    .body-text {
+      font-size: clamp(16px,1.15vw,20px); line-height: 1.8;
+      color: rgba(255,255,255,0.78); position: relative; z-index: 2;
+    }
+    .body-text + .body-text { margin-top: 1.2em; }
+    /* body-text su sfondo bianco */
+    .on-white .body-text { color: #1e3a52; }
+    .on-white .section-title { color: #0a1622; }
+    .on-white .gold-line { background: #d4a744; }
+
+    /* ── CHI SONO ── */
+    #chi-sono {
+      position: relative;
+      padding: clamp(90px,10vw,150px) clamp(28px,7vw,130px);
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: clamp(48px,7vw,110px);
+      align-items: center;
+      background: #ffffff;
+    }
+    #chi-sono::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+    }
+    /* testo a sinistra – nessuna immagine a destra (immagine è seconda colonna visivamente tramite order) */
+    .chi-sono-text { order: 1; }
+    .chi-sono-img-wrap { order: 2; display: flex; align-items: left; justify-content: left; }
+    .chi-sono-img-wrap img {
+      max-width: 180%;
+      max-height: 80vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* ── ATTIVITA PCTO ── */
+    #attivita { padding: clamp(70px,8vw,130px) clamp(28px,7vw,130px); }
+    .attivita-header { margin-bottom: clamp(48px,6vw,80px); }
+    .attivita-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 3px; }
+
+    .attivita-card {
+      position: relative; overflow: hidden; cursor: none;
+      min-height: 500px; display: flex; flex-direction: column; justify-content: flex-end;
+    }
+    /* video background */
+    .attivita-card video.card-video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .attivita-card .card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(0deg, rgba(10,22,34,0.96) 0%, rgba(10,22,34,0.55) 45%, rgba(10,22,34,0.18) 100%);
+      transition: 0.4s;
+    }
+    .attivita-card:hover .card-overlay {
+      background: linear-gradient(0deg, rgba(10,22,34,0.98) 0%, rgba(10,22,34,0.72) 55%, rgba(10,22,34,0.32) 100%);
+    }
+    .attivita-card .card-body { position: relative; z-index: 2; padding: clamp(28px,3vw,52px); }
+    .card-tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--bg);
+      background: var(--gold);
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: clamp(24px,2.6vw,40px); font-weight: 800;
+      line-height: 1.12; margin-bottom: 12px;
+    }
+    .card-sub {
+      font-size: clamp(14px,1vw,17px); color: rgba(255,255,255,0.72);
+      line-height: 1.65; max-width: 54ch;
+    }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 22px;
+      font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+      font-weight: 700; color: var(--gold); text-decoration: none; transition: gap 0.25s;
+    }
+    .card-link:hover { gap: 14px; }
+    .card-link svg { width: 16px; flex-shrink: 0; }
+
+    /* ── ALTRE ATTIVITÀ ── */
+    #altre {
+      padding: clamp(70px,8vw,130px) clamp(28px,7vw,130px);
+      border-top: 1px solid rgba(219,189,111,0.1);
+    }
+    .altre-header { margin-bottom: clamp(48px,5vw,80px); }
+
+    /* 2 colonne × 3 righe. Immagine sinistra, testo destra */
+    .altre-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(20px,2.5vw,36px);
+    }
+    .altra-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 3px;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+    .altra-card:hover {
+      border-color: rgba(219,189,111,0.38);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    }
+    /* Colonna immagine */
+    .altra-img-col {
+      position: relative; overflow: hidden; min-height: 260px;
+    }
+    /* Single-image (default): assoluta che copre tutto */
+    .altra-img-col img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      filter: brightness(0.88); transition: filter 0.3s, transform 0.4s;
+    }
+    .altra-card:hover .altra-img-col img {
+      filter: brightness(1); transform: scale(1.03);
+    }
+    /* Multi-photo layout: 1 grande sopra + 2 piccole sotto */
+    .altra-img-col.multi-photo {
+      display: flex; flex-direction: column; gap: 3px;
+      position: relative; overflow: hidden; min-height: 260px;
+    }
+    .altra-img-col.multi-photo img {
+      position: static; width: 100%; height: auto;
+      flex-shrink: 0; object-fit: cover; display: block;
+      filter: brightness(0.88); transition: filter 0.3s, transform 0.4s;
+    }
+    .altra-img-col.multi-photo .img-main {
+      flex: 1 1 auto; min-height: 0; object-fit: cover; width: 100%; height: 410px;
+    }
+    .altra-img-col.multi-photo .img-row {
+      display: flex; gap: 3px; flex: 0 0 auto;
+    }
+    .altra-img-col.multi-photo .img-row img {
+      flex: 1; object-fit: cover; height: 290px;
+    }
+    /* Multi-photo layout: 1 grande sopra + 1 piccola sotto (panoramica) */
+    .altra-img-col.multi-photo-2 {
+      display: flex; flex-direction: column; gap: 3px;
+      position: relative; overflow: hidden; min-height: 260px;
+    }
+    .altra-img-col.multi-photo-2 img {
+      position: static; width: 100%; object-fit: cover; display: block;
+      filter: brightness(0.88); transition: filter 0.3s, transform 0.4s;
+    }
+    .altra-img-col.multi-photo-2 .img-main {
+      flex: 1 1 auto; min-height: 0; height: 310px;
+    }
+    .altra-img-col.multi-photo-2 .img-bottom {
+      flex: 0 0 auto; height: 290px;
+    }
+    .altra-card:hover .altra-img-col.multi-photo img,
+    .altra-card:hover .altra-img-col.multi-photo-2 img {
+      filter: brightness(1);
+    }
+    /* Colonna testo */
+    .altra-body {
+      padding: clamp(28px,3vw,52px);
+      justify-content: center;
+    }
+
+    .altra-body .card-tag { margin-bottom: 12px; }
+    .altra-title {
+      font-size: clamp(17px,1.4vw,22px); font-weight: 700;
+      line-height: 1.2; margin-bottom: 12px;
+    }
+    .altra-text {
+      font-size: clamp(13px,0.92vw,16px); color: rgba(255,255,255,0.62); line-height: 1.75;
+    }
+    .altra-text + .altra-text { margin-top: 0.85em; }
+
+    /* ── TABELLA ── */
+    #tabella {
+      width: 100%; min-height: 100vh; position: relative; overflow: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: clamp(80px,9vw,140px) clamp(28px,6vw,120px) clamp(50px,6vw,100px);
+    }
+    #tabella::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(29,130,182,0.07) 0%, transparent 60%); z-index: 0;
+    }
+    #tabella img.tabella-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 115%;
+      object-fit: cover; filter: blur(18px) brightness(0.55);
+      transform: scale(1.05); display: block; z-index: 0;
+      will-change: transform;
+    }
+    /* dark overlay sopra il blur */
+    #tabella::after {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(10,22,34,0.60); z-index: 0;
+    }
+    #tabella .tabella-wrapper { position: relative; z-index: 1; width: 100%; }
+    .tabella-header { margin-bottom: clamp(36px,4vw,60px); }
+    .tabella-attivita {
+      width: 100%; border-collapse: collapse; font-family: var(--font);
+      font-size: clamp(12px,0.92vw,15px); line-height: 1.55; color: var(--white);
+      border-top: 1px solid rgba(255,255,255,0.25); border-bottom: 1px solid rgba(255,255,255,0.25);
+    }
+    .tabella-attivita th, .tabella-attivita td {
+      padding: clamp(14px,1.5vw,24px) clamp(8px,1vw,16px); text-align: left; border: none;
+    }
+    .tabella-attivita thead {
+      font-weight: 700; font-size: clamp(10px,0.75vw,13px);
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold);
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+    }
+    .tabella-attivita tbody tr { border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.2s; }
+    .tabella-attivita tbody tr:hover { background: rgba(29,130,182,0.15); }
+    .tabella-totale {
+      font-family: var(--font); color: rgba(255,255,255,0.55);
+      font-size: clamp(12px,0.88vw,15px); font-weight: 600; letter-spacing: 0.05em;
+      text-align: right; margin-top: 18px; width: 100%;
+    }
+
+    /* ── COMPETENZE ── */
+    #competenze {
+      padding: clamp(80px,9vw,140px) clamp(28px,7vw,130px);
+      border-top: 1px solid rgba(219,189,111,0.1);
+    }
+    .competenze-header { margin-bottom: clamp(48px,5vw,80px); }
+    .competenze-grid {
+      display: grid; grid-template-columns: repeat(2,1fr);
+      gap: clamp(20px,2.5vw,40px); margin-bottom: clamp(40px,5vw,80px);
+    }
+    .comp-block {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-top: 2px solid var(--gold); padding: clamp(26px,2.8vw,44px);
+      border-radius: 2px; transition: background 0.3s, transform 0.3s;
+    }
+    .comp-block:hover { background: rgba(29,130,182,0.08); transform: translateY(-3px); }
+    .comp-block-title { font-size: clamp(15px,1.2vw,20px); font-weight: 700; letter-spacing: 0.03em; margin-bottom: 14px; }
+    .comp-block-sub { font-size: clamp(13px,0.9vw,16px); color: rgba(255,255,255,0.55); margin-bottom: 22px; line-height: 1.7; }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill {
+      font-size: clamp(10px,0.72vw,12px); font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 5px 15px; border-radius: 100px; border: 1px solid;
+      transition: background-color 0.25s ease, color 0.25s ease; cursor: none;
+    }
+    .pill-gold   { border-color: var(--gold); color: var(--gold); }
+    .pill-white  { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); }
+    .pill-gold:hover  { background-color: var(--gold); color: var(--bg); }
+    .pill-white:hover { background-color: rgba(255,255,255,0.7); color: var(--bg); }
+
+    /* ── OBIETTIVI ── */
+    #obiettivi { padding: clamp(60px,7vw,120px) clamp(28px,7vw,130px); position: relative; }
+    #obiettivi::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, var(--bg) 0%, rgba(29,130,182,0.07) 50%, var(--bg) 100%);
+      pointer-events: none;
+    }
+    .ob-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: clamp(18px,2vw,36px); position: relative; z-index: 1;
+      margin-top: clamp(44px,5vw,72px);
+    }
+    .ob-item { padding: clamp(22px,2.2vw,36px); border-left: 2px solid var(--gold); }
+    .ob-num { font-size: clamp(36px,3.2vw,52px); font-weight: 900; color: var(--gold); opacity: 1; line-height: 1; margin-bottom: 14px; }
+    .ob-title { font-size: clamp(16px,1.2vw,20px); font-weight: 700; margin-bottom: 12px; }
+    .ob-text  { font-size: clamp(14px,0.95vw,17px); color: rgba(255,255,255,0.62); line-height: 1.75; }
+
+    /* ── RIFLESSIONE ── */
+    #riflessione {
+      padding: clamp(80px,9vw,140px) clamp(28px,7vw,130px);
+      position: relative; text-align: center; overflow: hidden;
+    }
+    #riflessione::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(29,130,182,0.13) 0%, transparent 70%);
+    }
+    .riflessione-inner { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; }
+    .riflessione-inner .gold-line { margin-left: auto; margin-right: auto; }
+    blockquote {
+      border-left: 2px solid var(--gold); padding-left: 26px;
+      margin: clamp(26px,2.5vw,44px) auto; text-align: left; max-width: 58ch;
+    }
+    blockquote p { font-size: clamp(16px,1.25vw,21px); font-style: italic; color: rgba(255,255,255,0.82); line-height: 1.7; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: clamp(28px,3vw,44px) clamp(28px,7vw,130px);
+      border-top: 1px solid rgba(219,189,111,0.15);
+      display: flex; align-items: center; justify-content: center;
+    }
+    footer p { font-size: 12px; color: rgba(255,255,255,0.38); letter-spacing: 0.07em; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.12s; }
+    .reveal-delay-2 { transition-delay: 0.22s; }
+    .reveal-delay-3 { transition-delay: 0.32s; }
+    .reveal-delay-4 { transition-delay: 0.42s; }
+    .reveal-delay-5 { transition-delay: 0.52s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .ob-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 900px) {
+      .altre-grid { grid-template-columns: 1fr; }
+      .altra-card { grid-template-columns: 1fr; }
+      .altra-img-col { min-height: 200px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      #chi-sono { grid-template-columns: 1fr; padding-top: clamp(100px,15vw,150px); }
+      .chi-sono-text { order: 1; }
+      .chi-sono-img-wrap { order: 2; max-width: 340px; margin: 0 auto; }
+      .attivita-grid { grid-template-columns: 1fr; }
+      .competenze-grid { grid-template-columns: 1fr; }
+      .ob-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition-duration: 0.01ms !important; }
+    }
+    /* ── CURSORE PERSONALIZZATO E ANIMAZIONE AL CLIC ── */
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s cubic-bezier(0.25, 1, 0.5, 1), height 0.25s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease, border 0.25s ease;
+    }
+    .custom-cursor.hover {
+      width: 45px;
+      height: 45px;
+      background-color: rgba(29, 130, 182, 0.1);
+      border: 1px solid var(--accent);
+    }
+    .cursor-ripple {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: transparent;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      animation: ripple-expansion 0.45s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    }
+    @keyframes ripple-expansion {
+      0% { width: 6px; height: 6px; opacity: 1; border-width: 2px; }
+      100% { width: 65px; height: 65px; opacity: 0; border-width: 1px; }
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .custom-cursor { display: none; }
+      body, a, button, .interactive-hover { cursor: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="custom-cursor"></div>
+
+  <!-- ── NAVBAR ── -->
+  <nav>
+    <a href="#home" class="nav-logo">Relazione PCTO</a>
+    <button class="hamburger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#chi-sono">Chi sono</a></li>
+      <li><a href="#attivita">Attività PCTO</a></li>
+      <li><a href="#altre">Altre attività</a></li>
+      <li><a href="#competenze">Competenze</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section id="home">
+    <img class="hero-bg" id="heroBg" src="FOTO_HERO.jpg" alt="" aria-hidden="true" />
+    <img class="hero-img" src="FOTO_HERO_TESTO.png" alt="Onofrio" />
+    <div class="scroll-indicator">
+      <span class="scroll-text">SCOPRI</span>
+      <div class="scroll-arrows">
+        <div class="chevron"></div>
+        <div class="chevron"></div>
+        <div class="chevron"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CHI SONO ── -->
+  <section id="chi-sono" class="on-white">
+    <div class="chi-sono-text reveal">
+      <span class="section-eyebrow">Introduzione</span>
+      <div class="gold-line"></div>
+      <h2 class="section-title">Chi sono</h2>
+      <p class="body-text" style="margin-top:24px;">
+        Mi chiamo Onofrio e frequento la classe 5ª CSA del Liceo Scientifico opzione Scienze Applicate "E. Amaldi" di Bitetto.
+      </p>
+      <p class="body-text">
+        Ho scelto questo indirizzo perché, già alla fine della scuola media, ero particolarmente interessato alle discipline scientifiche e all'informatica. All'epoca, però, vivevo lo studio in modo molto diverso rispetto a oggi: ero meno costante e dedicavo meno tempo all'approfondimento personale. Nel corso degli anni ho imparato a organizzarmi meglio, a essere più determinato e a considerare lo studio non come un obbligo, ma come un'opportunità di crescita.
+      </p>
+      <p class="body-text">
+        Questa scuola mi ha permesso di coltivare le mie passioni e di scoprirne di nuove. I corsi di programmazione hanno rafforzato il mio interesse per l'Informatica, orientandomi verso il futuro percorso universitario in Ingegneria Informatica, mentre esperienze come i Festival della Filosofia, i progetti cinematografici e le attività musicali mi hanno insegnato quanto sia importante affiancare alle competenze tecniche il pensiero critico, la creatività e la capacità di confrontarsi con gli altri.
+      </p>
+      <p class="body-text">
+        Le attività raccolte in questo sito raccontano proprio questo percorso di crescita. Ognuna di esse ha contribuito ad ampliare le mie competenze, la mia visione della realtà e la consapevolezza delle mie capacità. Tra poco questo capitolo si concluderà, ma so già che lascerò questa scuola con una nostalgia enorme. Qui ho vissuto esperienze che porterò sempre con me, ho costruito amicizie importanti e sono diventato la persona che sono oggi.
+      </p>
+      </div>
+    <div class="chi-sono-img-wrap reveal reveal-delay-1">
+      <img src="FOTO_ONNY.png" alt="Foto studente" />
+    </div>
+  </section>
+
+  <!-- ── ATTIVITA PCTO ── -->
+  <section id="attivita">
+    <div class="attivita-header reveal">
+      <span class="section-eyebrow">Percorsi Formativi</span>
+      <div class="gold-line"></div>
+      <h2 class="section-title">Attività PCTO</h2>
+    </div>
+
+    <div class="attivita-grid">
+
+      <!-- Festival della Filosofia -->
+      <div class="attivita-card reveal">
+        <video class="card-video" src="VIDEO_FESTIVAL.mp4" autoplay muted loop playsinline></video>
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <span class="card-tag">Filosofia</span>
+          <h3 class="card-title">Festival della<br>filosofia</h3>
+          <p class="card-sub">I Festival della Filosofia in Magna Grecia, svolti nel Cilento e successivamente in Grecia, hanno rappresentato una delle esperienze più significative del mio percorso. Attraverso il laboratorio di musica e momenti di confronto, ho sviluppato capacità di riflessione critica, di partecipazione attiva e di esibizione pubblica.</p>
+          <a href="festival.html" class="card-link">
+            Scopri di più
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Boolean -->
+      <div class="attivita-card reveal reveal-delay-1">
+        <video class="card-video" src="VIDEO_BOOLEAN.mp4" autoplay muted loop playsinline></video>
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <span class="card-tag">Informatica</span>
+          <h3 class="card-title">Informatica e web development</h3>
+          <p class="card-sub">I corsi organizzati da Boolean mi hanno permesso di approfondire il mondo della programmazione e delle tecnologie digitali. Attraverso la realizzazione di progetti pratici ho consolidato competenze tecniche e sviluppato un approccio sempre più orientato alla risoluzione dei problemi.</p>
+          <a href="boolean.html" class="card-link">
+            Scopri di più
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Orientamento e Alimentazione -->
+      <div class="attivita-card reveal reveal-delay-2">
+        <video class="card-video" src="VIDEO_ALIMENTAZIONE.mp4" autoplay muted loop playsinline></video>
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <span class="card-tag">Orientamento</span>
+          <h3 class="card-title">Orientamento e alimentazione</h3>
+          <p class="card-sub">L'attività "Scelgo consapevolmente Agricoltura, Alimenti, Ambiente e Territorio" mi ha consentito di approfondire il rapporto tra alimentazione, sostenibilità e scelte responsabili. Un'importante occasione di orientamento verso le problematiche ambientali e agroalimentari contemporanee.</p>
+          <a href="alimentazione.html" class="card-link">
+            Scopri di più
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Sicurezza sul Lavoro -->
+      <div class="attivita-card reveal reveal-delay-3">
+        <video class="card-video" src="VIDEO_SICUREZZA.mp4" autoplay muted loop playsinline></video>
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <span class="card-tag">Sicurezza</span>
+          <h3 class="card-title">Sicurezza<br>sul lavoro</h3>
+          <p class="card-sub">La formazione sulla sicurezza nei luoghi di lavoro mi ha fornito conoscenze fondamentali sui principi della prevenzione, della tutela della salute e della gestione dei rischi. Un percorso indispensabile per affrontare con consapevolezza qualsiasi futura esperienza lavorativa.</p>
+          <a href="sicurezza.html" class="card-link">
+            Scopri di più
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ALTRE ATTIVITÀ ── -->
+  <section id="altre">
+    <div class="altre-header reveal">
+      <span class="section-eyebrow">Esperienze Complementari</span>
+      <div class="gold-line"></div>
+      <h2 class="section-title">Altre attività</h2>
+    </div>
+
+    <div class="altre-grid">
+
+      <!-- CinemAmaldi -->
+      <div class="altra-card reveal">
+        <div class="altra-img-col multi-photo">
+          <img class="img-main" src="FOTO_CINEMAMALDI_1.PNG" alt="CinemAmaldi" />
+          <div class="img-row">
+            <img src="FOTO_CINEMAMALDI_2.PNG" alt="CinemAmaldi 2" />
+            <img src="FOTO_CINEMAMALDI_3.PNG" alt="CinemAmaldi 3" />
+          </div>
+        </div>
+        <div class="altra-body">
+          <span class="card-tag">Cinema &amp; Audiovisivo</span>
+          <h3 class="altra-title">CinemAmaldi</h3>
+          <p class="altra-text">Durante il quarto e il quinto anno ho partecipato al progetto CinemAmaldi, un percorso dedicato alla scoperta del linguaggio cinematografico e delle sue potenzialità espressive. Attraverso attività di scrittura, progettazione e produzione audiovisiva ho avuto l'opportunità di conoscere le diverse fasi della realizzazione di un cortometraggio, dalla sceneggiatura alla composizione delle colonne sonore, dalle riprese al montaggio finale.</p>
+          <p class="altra-text">L'esperienza ha favorito lo sviluppo di competenze creative, organizzative e collaborative, valorizzando il lavoro di squadra e la capacità di contribuire a un progetto comune. Nel corso del quarto anno mi è stato conferito il premio "Piùcheperfetto" all'interno della "Compagnia degli Imperfetti", riconoscimento assegnato per aver dimostrato responsabilità, spirito di squadra e costante volontà di miglioramento, secondo il motto <em>«Age quod agis»</em>.</p>
+        </div>
+      </div>
+
+      <!-- Mediashow 2025 -->
+      <div class="altra-card reveal reveal-delay-1">
+        <div class="altra-img-col multi-photo">
+          <img class="img-main" src="FOTO_MEDIASHOW_1.PNG" alt="Mediashow" />
+          <div class="img-row">
+            <img src="FOTO_MEDIASHOW_2.PNG" alt="Mediashow 2" />
+            <img src="FOTO_MEDIASHOW_3.PNG" alt="Mediashow 3" />
+          </div>
+        </div>
+        <div class="altra-body">
+          <span class="card-tag">Multimedialità</span>
+          <h3 class="altra-title">Mediashow 2025</h3>
+          <p class="altra-text">Nel 2025 ho partecipato alla XXV edizione del Mediashow, le Olimpiadi della Multimedialità che si svolgono annualmente a Melfi e coinvolgono studenti provenienti da numerose scuole italiane. La manifestazione è dedicata alla produzione audiovisiva, alle nuove tecnologie e alla comunicazione digitale, offrendo occasioni di confronto, formazione e sperimentazione.</p>
+          <p class="altra-text">Oltre alla competizione, l'esperienza è stata arricchita dalla partecipazione a laboratori e incontri di approfondimento su temi di grande attualità, tra cui l'intelligenza artificiale e le sue implicazioni etiche. Particolarmente significativo è stato l'intervento del professor Paolo Benanti, che ha proposto una riflessione sul rapporto tra innovazione tecnologica, responsabilità e dimensione umana. L'attività ha rappresentato un'importante occasione di crescita culturale e personale, permettendomi di confrontarmi con studenti e docenti provenienti da realtà diverse.</p>
+        </div>
+      </div>
+
+      <!-- Viaggio a Praga -->
+      <div class="altra-card reveal reveal-delay-2">
+        <div class="altra-img-col multi-photo">
+          <img class="img-main" src="FOTO_PRAGA_1.PNG" alt="Praga" />
+          <div class="img-row">
+            <img src="FOTO_PRAGA_2.PNG" alt="Praga 2" />
+            <img src="FOTO_PRAGA_3.PNG" alt="Praga 3" />
+          </div>
+        </div>
+        <div class="altra-body">
+          <span class="card-tag">Cultura</span>
+          <h3 class="altra-title">Viaggio di istruzione a Praga</h3>
+          <p class="altra-text">Nel corso del quinto anno ho partecipato a un viaggio di istruzione di cinque giorni a Praga, esperienza che ha rappresentato un'importante opportunità di approfondimento storico, artistico e culturale. Durante il soggiorno ho visitato alcuni dei luoghi più significativi della capitale ceca, tra cui la Città Vecchia, il Castello di Praga, il Ponte Carlo e il Quartiere Ebraico.</p>
+          <p class="altra-text">Particolarmente significativa è stata la visita al campo di concentramento di Terezín, che ha offerto un'importante occasione di riflessione sulle tragedie del Novecento e sul valore della memoria storica. L'intero viaggio ha contribuito ad ampliare la conoscenza del patrimonio culturale europeo e ha favorito momenti di condivisione e crescita personale insieme ai compagni di classe.</p>
+        </div>
+      </div>
+
+      <!-- Open Day -->
+      <div class="altra-card reveal reveal-delay-3">
+        <div class="altra-img-col multi-photo-2">
+          <img class="img-main" src="FOTO_OPENDAY_1.PNG" alt="Open Day" />
+          <img class="img-bottom" src="FOTO_OPENDAY_2.PNG" alt="Open Day 2" />
+        </div>
+        <div class="altra-body">
+          <span class="card-tag">Orientamento scolastico</span>
+          <h3 class="altra-title">Open Day del liceo "E. Amaldi"</h3>
+          <p class="altra-text">Nel corso dell'anno scolastico 2025/2026 ho partecipato a quattro giornate di Open Day del liceo "E. Amaldi", contribuendo alle attività di orientamento rivolte agli studenti delle scuole secondarie di primo grado e alle loro famiglie. Ho svolto il ruolo di studente dell'Accoglienza presso l'Infopoint, fornendo informazioni, chiarimenti e suggerimenti ai visitatori interessati all'offerta formativa dell'istituto.</p>
+          <p class="altra-text">Indossando la felpa ufficiale della scuola e il cartellino identificativo, ho accolto genitori e studenti durante la fase iniziale della visita, illustrando in particolare le caratteristiche del Liceo Scientifico opzione Scienze Applicate. Questa esperienza mi ha permesso di sviluppare competenze comunicative e relazionali, imparando a presentare in modo chiaro ed efficace la realtà scolastica di cui faccio parte.</p>
+        </div>
+      </div>
+
+      <!-- Concerto di Natale -->
+      <div class="altra-card reveal reveal-delay-4">
+        <div class="altra-img-col multi-photo-2">
+          <img class="img-main" src="FOTO_NATALE_1.PNG" alt="Concerto di Natale" />
+          <img class="img-bottom" src="FOTO_NATALE_2.PNG" alt="Concerto di Natale 2" />
+        </div>
+        <div class="altra-body">
+          <span class="card-tag">Musica</span>
+          <h3 class="altra-title">Concerto di Natale</h3>
+          <p class="altra-text">Il 18 dicembre 2025 ho partecipato al Concerto di Natale organizzato nell'Auditorium della scuola in occasione dell'Assemblea d'Istituto. Durante l'evento ho eseguito al pianoforte il brano <em>Liebestraum n. 3</em> di Franz Liszt, uno dei più celebri componimenti del repertorio pianistico romantico.</p>
+          <p class="altra-text">L'esperienza ha rappresentato un'importante occasione per condividere con la comunità scolastica una passione coltivata negli anni attraverso lo studio della musica. L'esibizione pubblica ha inoltre contribuito a rafforzare la capacità di gestione dell'emozione e della concentrazione davanti a un pubblico numeroso.</p>
+        </div>
+      </div>
+
+      <!-- Concerto Erasmus+ -->
+      <div class="altra-card reveal reveal-delay-5">
+        <div class="altra-img-col multi-photo-2">
+          <img class="img-main" src="FOTO_ERASMUS_1.PNG" alt="Concerto Erasmus+" />
+          <img class="img-bottom" src="FOTO_ERASMUS_2.PNG" alt="Concerto Erasmus+ 2" />
+        </div>
+        <div class="altra-body">
+          <span class="card-tag">Musica &amp; Erasmus+</span>
+          <h3 class="altra-title">Concerto Erasmus+</h3>
+          <p class="altra-text">Il 28 marzo 2026 ho partecipato al concerto conclusivo della settimana di scambio Erasmus+, organizzata dal Liceo "E. Amaldi" con delegazioni provenienti da Spagna, Lituania e Germania. In questa occasione ho suonato le tastiere all'interno di una band composta da due chitarristi, un bassista, un batterista e un cantante.</p>
+          <p class="altra-text">Durante il concerto sono stati eseguiti i brani <em>American Idiot</em>, <em>Hit the Road Jack</em> e il brano inedito <em>Voli Via</em>. L'evento ha rappresentato un significativo momento di incontro interculturale, utilizzando la musica come linguaggio universale capace di favorire la condivisione e il dialogo tra studenti provenienti da Paesi diversi. La partecipazione al concerto mi ha permesso di consolidare le capacità di collaborazione all'interno di un gruppo musicale e di esibirmi in un contesto internazionale particolarmente stimolante.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <!-- ── TABELLA ── -->
+  <section id="tabella">
+    <img class="tabella-bg" id="tabellaBg" src="FOTO_HERO.jpg" alt="" aria-hidden="true" />
+    <div class="tabella-wrapper reveal">
+      <div class="tabella-header">
+        <span class="section-eyebrow">Documentazione</span>
+        <div class="gold-line"></div>
+        <h2 class="section-title">Riepilogo delle ore</h2>
+      </div>
+      <table class="tabella-attivita">
+        <thead>
+          <tr>
+            <th>Anno scolastico</th>
+            <th>Attività PCTO</th>
+            <th>Periodo</th>
+            <th>Durata</th>
+            <th>Discipline coinvolte</th>
+            <th>Ente</th>
+            <th>Modalità</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2023/2024</td>
+            <td>Corso di Formazione Generale sulla Sicurezza nei Luoghi di Lavoro</td>
+            <td>18/11/2023 – 23/11/2023</td>
+            <td>4 ore</td>
+            <td>Educazione civica</td>
+            <td>Istituto Nazionale per l'Assicurazione contro degli Infortuni sul Lavoro</td>
+            <td>Online</td>
+          </tr>
+          <tr>
+            <td>2023/2024</td>
+            <td>Scelgo consapevolmente in tema di Agricoltura</td>
+            <td>2023/2024</td>
+            <td>2,5 ore</td>
+            <td>Scienze</td>
+            <td>Università degli Studi di Bari Aldo Moro</td>
+            <td>Presso il Liceo E. Amaldi di Bitetto</td>
+          </tr>
+          <tr>
+            <td>2023/2024</td>
+            <td>BOOLEAN – Coding Week: Arcade Collection</td>
+            <td>16/10/2023 – 20/10/2023</td>
+            <td>8 ore</td>
+            <td>Informatica, Programmazione</td>
+            <td>Boolean SRL</td>
+            <td>Online</td>
+          </tr>
+          <tr>
+            <td>2023/2024</td>
+            <td>Festival della Filosofia in Magna Grecia</td>
+            <td>15/04/2024 – 19/04/2024</td>
+            <td>30 ore</td>
+            <td>Filosofia</td>
+            <td>Associazione Festival della Filosofia in Magna Grecia</td>
+            <td>In presenza (Cilento)</td>
+          </tr>
+          <tr>
+            <td>2024/2025</td>
+            <td>BOOLEAN – Web Development: AI Apps</td>
+            <td>22/09/2024 - 26/09/2024</td>
+            <td>8 ore</td>
+            <td>Informatica, Web Development, AI</td>
+            <td>Boolean SRL</td>
+            <td>Online</td>
+          </tr>
+          <tr>
+            <td>2024/2025</td>
+            <td>BOOLEAN – Web Development: AI Apps</td>
+            <td>19/09/2024 - 26/09/2024</td>
+            <td>14 ore</td>
+            <td>Informatica, Web Development</td>
+            <td>Boolean SRL</td>
+            <td>Online</td>
+          </tr>
+          <tr>
+            <td>2024/2025</td>
+            <td>BOOLEAN – Web Development: AI Apps</td>
+            <td>01/10/2024 - 05/10/2024</td>
+            <td>10 ore</td>
+            <td>Informatica, Web Development</td>
+            <td>Boolean SRL</td>
+            <td>Online</td>
+          </tr>
+          <tr>
+            <td>2024/2025</td>
+            <td>Festival della Filosofia in Magna Grecia</td>
+            <td>16/03/2025 – 21/03/2025</td>
+            <td>40 ore</td>
+            <td>Filosofia</td>
+            <td>Associazione Festival della Filosofia in Magna Grecia</td>
+            <td>In presenza (Grecia)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="tabella-totale">Totale ore documentate: 116,5 ore</p>
+    </div>
+  </section>
+
+  <!-- ── COMPETENZE ── -->
+  <section id="competenze">
+    <div class="competenze-header reveal">
+      <span class="section-eyebrow">Profilo Professionale</span>
+      <div class="gold-line"></div>
+      <h2 class="section-title">Competenze e<br>conoscenze acquisite</h2>
+      <p class="body-text" style="margin-top:18px; max-width:62ch;">
+        Le attività PCTO svolte nel triennio mi hanno permesso di sviluppare competenze sia tecniche sia trasversali, costruendo un profilo più completo e consapevole, capace di muoversi con autonomia tra ambiti diversi.
+      </p>
+    </div>
+    <div class="competenze-grid">
+      <div class="comp-block reveal">
+        <div class="comp-block-title">Informatica e Web development</div>
+        <div class="comp-block-sub">Attraverso i corsi Boolean ho acquisito competenze concrete nel campo della programmazione, dello sviluppo web e delle tecnologie legate all'intelligenza artificiale. Ho imparato a strutturare progetti digitali dalla pianificazione al deploy, consolidando un metodo di lavoro sistematico e orientato al problema.</div>
+        <div class="pills">
+          <span class="pill pill-gold">HTML &amp; CSS</span>
+          <span class="pill pill-gold">JavaScript</span>
+          <span class="pill pill-gold">Web Development</span>
+          <span class="pill pill-gold">AI Apps</span>
+          <span class="pill pill-white">Problem Solving</span>
+          <span class="pill pill-white">Pensiero logico</span>
+        </div>
+      </div>
+      <div class="comp-block reveal reveal-delay-1">
+        <div class="comp-block-title">Pensiero critico e comunicazione</div>
+        <div class="comp-block-sub">I Festival della filosofia hanno favorito lo sviluppo del ragionamento critico, della capacità argomentativa e dell'esibizione pubblica. Ho imparato a costruire e difendere un'idea con rigore, ad ascoltare punti di vista differenti e a tradurre il pensiero in forma comunicativa efficace.</div>
+        <div class="pills">
+          <span class="pill pill-gold">Pensiero critico</span>
+          <span class="pill pill-gold">Public speaking</span>
+          <span class="pill pill-white">Argomentazione</span>
+          <span class="pill pill-white">Ascolto attivo</span>
+          <span class="pill pill-white">Riflessione etica</span>
+        </div>
+      </div>
+      <div class="comp-block reveal reveal-delay-2">
+        <div class="comp-block-title">Lavoro di gruppo e leadership</div>
+        <div class="comp-block-sub">Esperienze come CinemAmaldi, Mediashow e i Festival della filosofia mi hanno insegnato a collaborare in modo efficace all'interno di un team, a gestire responsabilità condivise e a contribuire con il mio apporto personale in contesti creativi e competitivi.</div>
+        <div class="pills">
+          <span class="pill pill-gold">Teamwork</span>
+          <span class="pill pill-gold">Responsabilità</span>
+          <span class="pill pill-white">Spirito d'iniziativa</span>
+          <span class="pill pill-white">Gestione del tempo</span>
+        </div>
+      </div>
+      <div class="comp-block reveal reveal-delay-3">
+        <div class="comp-block-title">Sicurezza e mondo del lavoro</div>
+        <div class="comp-block-sub">Il corso sulla sicurezza nei luoghi di lavoro e le attività di orientamento mi hanno fornito una conoscenza concreta dei diritti e dei doveri del lavoratore, dei principi di prevenzione e tutela della salute, e del funzionamento del mondo universitario e professionale.</div>
+        <div class="pills">
+          <span class="pill pill-gold">Sicurezza sul lavoro</span>
+          <span class="pill pill-white">Prevenzione rischi</span>
+          <span class="pill pill-white">Orientamento universitario</span>
+          <span class="pill pill-white">Scelte consapevoli</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── OBIETTIVI ── -->
+  <section id="obiettivi">
+    <div class="reveal" style="text-align:center;">
+      <span class="section-eyebrow">Risultati</span>
+      <div class="gold-line" style="margin-left:auto;margin-right:auto;"></div>
+      <h2 class="section-title">Obiettivi raggiunti e valenza orientativa</h2>
+    </div>
+    <div class="ob-grid">
+      <div class="ob-item reveal">
+        <div class="ob-num">01</div>
+        <div class="ob-title">Contatto con la realtà</div>
+        <div class="ob-text">Le esperienze svolte mi hanno consentito di entrare in contatto con realtà differenti, approfondire nuovi ambiti disciplinari e applicare concretamente le conoscenze acquisite durante il percorso scolastico.</div>
+      </div>
+      <div class="ob-item reveal reveal-delay-1">
+        <div class="ob-num">02</div>
+        <div class="ob-title">Interesse per la tecnologia</div>
+        <div class="ob-text">I corsi di informatica hanno rafforzato il mio interesse verso le discipline tecnologiche, confermando la scelta di proseguire gli studi universitari nel campo dell'Ingegneria Informatica al Politecnico di Bari.</div>
+      </div>
+      <div class="ob-item reveal reveal-delay-2">
+        <div class="ob-num">03</div>
+        <div class="ob-title">Visione interdisciplinare</div>
+        <div class="ob-text">Le esperienze culturali e formative hanno favorito una visione più ampia e interdisciplinare del sapere, permettendomi di comprendere meglio le mie attitudini e i miei interessi futuri.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RIFLESSIONE FINALE ── -->
+  <section id="riflessione">
+    <div class="riflessione-inner reveal">
+      <span class="section-eyebrow">In conclusione</span>
+      <div class="gold-line"></div>
+      <h2 class="section-title">Riflessione<br><em>finale</em></h2>
+      <blockquote>
+        <p>«Il PCTO si è rivelato un percorso utile e stimolante, capace di integrare la formazione scolastica con esperienze concrete e significative.»</p>
+      </blockquote>
+      <p class="body-text">
+        Considero il percorso PCTO un'importante occasione di crescita personale, culturale e professionale. Le diverse attività mi hanno permesso di acquisire nuove competenze, confrontarmi con contesti differenti e sviluppare una maggiore consapevolezza delle mie capacità e dei miei obiettivi futuri.
+      </p>
+      <p class="body-text">
+        Tra tutte le esperienze, i Festival della filosofia e i corsi di informatica hanno avuto un impatto particolarmente significativo, poiché hanno contribuito sia alla mia formazione personale sia all'orientamento delle mie future scelte accademiche.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <p>Liceo Scientifico opzione Scienze Applicate "E. Amaldi"</p>
+  </footer>
+
+  <!-- ── JS ── -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.10 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const nav = document.querySelector('nav');
+    const heroSection = document.getElementById('home');
+    const heroBg = document.getElementById('heroBg');
+    const tabellaBg = document.getElementById('tabellaBg');
+    const tabellaSection = document.getElementById('tabella');
+
+    // ── PARALLAX ──
+    // 0.4 = le immagini bg scorrono al 40% della velocità del resto della pagina
+    const PARALLAX_SPEED = 0.4;
+
+    function updateParallax() {
+      const scrollY = window.scrollY;
+      heroBg.style.transform = `translateY(${scrollY * PARALLAX_SPEED}px)`;
+      const tabellaScroll = (scrollY - tabellaSection.offsetTop) * PARALLAX_SPEED;
+      tabellaBg.style.transform = `scale(1.05) translateY(${tabellaScroll}px)`;
+    }
+
+    window.addEventListener('scroll', () => {
+      updateParallax();
+      const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+      if (window.scrollY + nav.offsetHeight >= heroBottom) {
+        nav.classList.add('nav-scrolled');
+      } else {
+        nav.classList.remove('nav-scrolled');
+      }
+    }, { passive: true });
+
+    updateParallax();
+
+    function toggleMenu() {
+      const links = document.getElementById('navLinks');
+      const isOpen = links.style.display === 'flex';
+      if (!isOpen) {
+        links.style.display = 'flex';
+        links.style.flexDirection = 'column';
+        links.style.position = 'absolute';
+        links.style.top = '100%';
+        links.style.left = '0';
+        links.style.right = '0';
+        links.style.background = 'rgba(10,22,34,0.98)';
+        links.style.padding = '24px clamp(20px,5vw,80px) 32px';
+        links.style.gap = '22px';
+        links.style.borderBottom = '1px solid rgba(219,189,111,0.18)';
+      } else {
+        links.style.display = 'none';
+      }
+    }
+
+    // Controllo e aggiornamento della posizione del cursore personalizzato
+    const cursor = document.querySelector('.custom-cursor');
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    // Animazione ad onde (ripple) generata dinamicamente ad ogni clic del mouse
+    document.addEventListener('click', (e) => {
+      const ripple = document.createElement('div');
+      ripple.className = 'cursor-ripple';
+      ripple.style.left = e.clientX + 'px';
+      ripple.style.top = e.clientY + 'px';
+      document.body.appendChild(ripple);
+
+      cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
+      setTimeout(() => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+      }, 90);
+
+      ripple.addEventListener('animationend', () => {
+        ripple.remove();
+      });
+    });
+
+    // Associazione degli eventi di interazione per l'espansione del cursore sugli elementi cliccabili
+    const interactiveElements = document.querySelectorAll('a, button, .interactive-hover, .comp-tags span, .pill');
+
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+  </script>
+</body>
+</html>
