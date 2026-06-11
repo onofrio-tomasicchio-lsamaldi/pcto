@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orientamento e Alimentazione - Tomasicchio Onofrio</title>
+  <link href="https://fonts.cdnfonts.com/css/codec-pro" rel="stylesheet" />
+  <style>
+    :root {
+      --dark:  #0a1622;
+      --white: #ffffff;
+      --gold:  #DBBD6F;
+      --gold-dim: rgba(219,189,111,0.12);
+      --nav-blur: blur(18px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    /* ── CURSORE PERSONALIZZATO (Stili) ── */
+    body, a, button, .interactive-hover { cursor: none; }
+
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      background-color: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s cubic-bezier(0.25, 1, 0.5, 1), height 0.25s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease, border 0.25s ease;
+    }
+
+    .custom-cursor.hover {
+      width: 45px;
+      height: 45px;
+      background-color: rgba(219, 189, 111, 0.1);
+      border: 1px solid var(--gold);
+    }
+
+    .cursor-ripple {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: transparent;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      animation: ripple-expansion 0.45s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    }
+
+    @keyframes ripple-expansion {
+      0% { width: 6px; height: 6px; opacity: 1; border-width: 2px; }
+      100% { width: 65px; height: 65px; opacity: 0; border-width: 1px; }
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .custom-cursor { display: none; }
+      body, a, button, .interactive-hover { cursor: auto; }
+    }
+
+    body {
+      font-family: 'Codec Pro', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── RESTO DELLO STILE ── */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 200;
+      padding: 22px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: var(--nav-blur); -webkit-backdrop-filter: var(--nav-blur);
+      background: rgba(10,22,34,0.72);
+    }
+    .nav-back {
+      color: var(--gold); text-decoration: none;
+      font-size: clamp(10px,0.85vw,14px); font-weight: 600;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 8px;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 0.7; }
+    .nav-title {
+      font-size: clamp(10px,0.85vw,14px); font-weight: 600;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--white); opacity: 0.45;
+    }
+
+    .hero {
+      min-height: 100vh;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: clamp(80px,10vw,160px) clamp(30px,6vw,120px) clamp(60px,7vw,110px);
+    }
+    .hero-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 130%;
+      object-fit: cover;
+      z-index: 0;
+      top: -15%;
+      will-change: transform;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: rgba(10,22,34,0.62);
+      z-index: 1;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: clamp(30px,6vw,120px);
+      width: 1px; height: 38%;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+      z-index: 2;
+    }
+    .hero-content { position: relative; z-index: 3; }
+
+    .hero-eyebrow {
+      font-size: clamp(11px,0.85vw,14px); font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: clamp(18px,2vw,32px);
+      opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
+    }
+    .hero-title {
+      font-size: clamp(40px,6vw,110px); font-weight: 700;
+      line-height: 1.0; letter-spacing: -0.02em;
+      color: var(--white); max-width: 16ch;
+      opacity: 0; animation: fadeUp 0.7s 0.4s forwards;
+    }
+    .hero-title em { font-style: normal; color: var(--gold); }
+    .hero-sub {
+      margin-top: clamp(24px,2.5vw,40px);
+      font-size: clamp(13px,1vw,18px); line-height: 1.75;
+      color: rgba(255,255,255,0.72); max-width: 58ch;
+      opacity: 0; animation: fadeUp 0.7s 0.6s forwards;
+    }
+    .hero-stats {
+      display: flex; gap: clamp(30px,4vw,70px);
+      margin-top: clamp(36px,4vw,64px);
+      opacity: 0; animation: fadeUp 0.7s 0.8s forwards;
+    }
+    .stat { display: flex; flex-direction: column; gap: 4px; }
+    .stat-num {
+      font-size: clamp(28px,3vw,52px); font-weight: 700;
+      color: var(--gold); letter-spacing: -0.02em; line-height: 1;
+    }
+    .stat-label {
+      font-size: clamp(10px,0.75vw,13px); letter-spacing: 0.15em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+    }
+
+    .divider {
+      width: clamp(30px,4vw,80px); height: 1px;
+      background: var(--gold); opacity: 0.4;
+      margin: clamp(50px,7vw,110px) clamp(30px,6vw,120px) 0;
+    }
+
+    .section { padding: clamp(50px,6vw,100px) clamp(30px,6vw,120px); }
+    .section-label {
+      font-size: clamp(10px,0.78vw,13px); font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: clamp(20px,2.5vw,40px);
+    }
+    .section-title {
+      font-size: clamp(24px,2.8vw,52px); font-weight: 700;
+      letter-spacing: -0.01em; line-height: 1.1;
+      color: var(--white); margin-bottom: clamp(24px,2.5vw,44px);
+    }
+    .section-body {
+      font-size: clamp(14px,1.05vw,20px); line-height: 1.85;
+      color: rgba(255,255,255,0.72); max-width: 72ch;
+    }
+    .section-body p + p { margin-top: clamp(14px,1.5vw,24px); }
+
+    .two-col {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(40px,5vw,100px); align-items: start;
+    }
+
+    .img-slot {
+      width: 100%; aspect-ratio: 4/3;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .img-slot img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+    .gold-quote {
+      border-left: 3px solid var(--gold);
+      padding: clamp(16px,2vw,28px) clamp(20px,2.5vw,40px);
+      margin: clamp(30px,3.5vw,56px) 0;
+      background: var(--gold-dim);
+      border-radius: 0 4px 4px 0;
+      font-size: clamp(15px,1.15vw,22px); line-height: 1.7;
+      color: rgba(255,255,255,0.85); font-style: italic;
+    }
+
+    .pills {
+      display: flex; flex-wrap: wrap; gap: clamp(8px,1vw,14px);
+      margin-top: clamp(20px,2.5vw,36px);
+    }
+    .pill {
+      padding: clamp(6px,0.6vw,10px) clamp(14px,1.4vw,24px);
+      border: 1px solid rgba(219,189,111,0.45); border-radius: 999px;
+      font-size: clamp(11px,0.78vw,14px); font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--gold); background: transparent;
+      transition: background 0.2s, color 0.2s;
+    }
+    .pill:hover { background: var(--gold); color: var(--dark); }
+
+    .temi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(14px,1.8vw,28px);
+      margin-top: clamp(24px,2.5vw,44px);
+    }
+    .tema-box {
+      padding: clamp(18px,2vw,34px);
+      border: 1px solid rgba(219,189,111,0.2);
+      border-radius: 4px;
+      background: rgba(219,189,111,0.05);
+    }
+    .tema-icon {
+      font-size: clamp(22px,2.2vw,36px);
+      margin-bottom: clamp(10px,1vw,18px);
+      display: block;
+    }
+    .tema-title {
+      font-size: clamp(13px,1vw,18px); font-weight: 700;
+      color: var(--white); margin-bottom: clamp(6px,0.6vw,10px);
+    }
+    .tema-body {
+      font-size: clamp(12px,0.88vw,16px); line-height: 1.7;
+      color: rgba(255,255,255,0.58);
+    }
+
+    .procon {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(20px,2.5vw,40px); margin-top: clamp(24px,2.5vw,40px);
+    }
+    .procon-box { padding: clamp(20px,2vw,36px); border-radius: 4px; }
+    .procon-box.pro { background: rgba(219,189,111,0.08); border: 1px solid rgba(219,189,111,0.25); }
+    .procon-box.con { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); }
+    .procon-head {
+      font-size: clamp(10px,0.75vw,13px); font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      margin-bottom: clamp(12px,1.2vw,20px);
+    }
+    .procon-box.pro .procon-head { color: var(--gold); }
+    .procon-box.con .procon-head { color: rgba(255,255,255,0.4); }
+    .procon-body {
+      font-size: clamp(13px,0.95vw,17px); line-height: 1.75;
+      color: rgba(255,255,255,0.68);
+    }
+
+    .footer-back {
+      padding: clamp(50px,6vw,100px) clamp(30px,6vw,120px);
+      border-top: 1px solid rgba(219,189,111,0.15);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-back a {
+      color: var(--gold); text-decoration: none;
+      font-size: clamp(11px,0.85vw,15px); font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 10px;
+      transition: opacity 0.2s;
+    }
+    .footer-back a:hover { opacity: 0.7; }
+    .footer-copy {
+      font-size: clamp(10px,0.75vw,13px); letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.2); text-transform: uppercase;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 860px) {
+      .two-col, .procon, .temi-grid { grid-template-columns: 1fr; }
+      nav { padding: 18px 20px; }
+      .hero { padding: 100px 24px 60px; }
+      .hero::before { left: 24px; }
+      .section { padding: 50px 24px; }
+      .divider { margin-left: 24px; margin-right: 24px; }
+      .footer-back { padding: 50px 24px; flex-direction: column; gap: 20px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="custom-cursor"></div>
+
+  <nav>
+    <a class="nav-back" href="index.html#attivita">← Torna alla home</a>
+    <span class="nav-title">Orientamento e Alimentazione</span>
+  </nav>
+
+  <section class="hero">
+    <video class="hero-video" src="https://www.orbia.com/4a278b/siteassets/1.homepage/or_purposevideo_home-video.mp4" autoplay muted loop playsinline></video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Attività PCTO · 2023–2024</p>
+      <h1 class="hero-title">Scelgo <em>consapevolmente</em></h1>
+      <p class="hero-sub">Un incontro con il Dipartimento di Agraria dell'Università di Bari su alimentazione, sostenibilità e territorio — per imparare a scegliere con maggiore consapevolezza.</p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">2,5</span><span class="stat-label">Ore</span></div>
+        <div class="stat"><span class="stat-num">1</span><span class="stat-label">Incontro</span></div>
+        <div class="stat"><span class="stat-num">Uni</span><span class="stat-label">di Bari</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <p class="section-label">Il progetto</p>
+    <h2 class="section-title">Agricoltura, Alimenti, Ambiente e Territorio</h2>
+    <div class="two-col">
+      <div class="section-body">
+        <p>L'attività "Scelgo consapevolmente – Agricoltura, Alimenti, Ambiente e Territorio", organizzata dal Dipartimento di Agraria dell'Università degli Studi di Bari Aldo Moro, si è svolta presso il Liceo "E. Amaldi" di Bitetto con finalità orientative e formative.</p>
+        <p>L'incontro era rivolto agli studenti interessati ad approfondire le tematiche legate all'agricoltura, alla sostenibilità ambientale e alla filiera agroalimentare, offrendo una panoramica sulle opportunità di studio e di lavoro nel settore.</p>
+        <p>Durante l'attività sono stati affrontati argomenti riguardanti il rapporto tra alimentazione, ambiente e sviluppo sostenibile. I relatori hanno evidenziato l'importanza di scelte consapevoli nella produzione e nel consumo degli alimenti, sottolineando il ruolo che l'innovazione scientifica e tecnologica può avere nella tutela del territorio e delle risorse naturali.</p>
+        <p>L'incontro prevedeva anche la compilazione di un questionario e alcune attività di riflessione guidata finalizzate a stimolare una maggiore consapevolezza delle proprie abitudini alimentari e del loro impatto sulla salute e sull'ambiente.</p>
+      </div>
+      <div class="img-slot">
+        <video src="VIDEO_ALIMENTAZIONE.mp4" autoplay muted loop playsinline alt="Orientamento e Alimentazione"></video>
+      </div>
+    </div>
+
+    <blockquote class="gold-quote" style="max-width: 72ch; margin-top: clamp(30px,3.5vw,56px);">
+      "Questo approccio ha permesso di collegare temi scientifici a situazioni concrete della vita quotidiana."
+    </blockquote>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <p class="section-label">Contenuti</p>
+    <h2 class="section-title">Temi affrontati</h2>
+    <div class="temi-grid">
+      <div class="tema-box">
+        <span class="tema-icon">🌾</span>
+        <p class="tema-title">Agricoltura sostenibile</p>
+        <p class="tema-body">Il ruolo dell'innovazione nella produzione agricola e il rapporto tra tecnologia e tutela delle risorse naturali.</p>
+      </div>
+      <div class="tema-box">
+        <span class="tema-icon">🥗</span>
+        <p class="tema-title">Alimentazione consapevole</p>
+        <p class="tema-body">L'impatto delle scelte alimentari quotidiane sulla salute individuale, sull'ambiente e sulla società.</p>
+      </div>
+      <div class="tema-box">
+        <span class="tema-icon">🌍</span>
+        <p class="tema-title">Sviluppo sostenibile</p>
+        <p class="tema-body">Il rapporto tra filiera agroalimentare, territorio e sostenibilità ambientale nel contesto contemporaneo.</p>
+      </div>
+      <div class="tema-box">
+        <span class="tema-icon">🔬</span>
+        <p class="tema-title">Innovazione scientifica</p>
+        <p class="tema-body">Come la ricerca scientifica e tecnologica contribuisce alla tutela del territorio e delle risorse naturali.</p>
+      </div>
+      <div class="tema-box">
+        <span class="tema-icon">🎓</span>
+        <p class="tema-title">Orientamento universitario</p>
+        <p class="tema-body">Panoramica sui percorsi di studio e sulle opportunità di lavoro nel settore agrario e agroalimentare.</p>
+      </div>
+      <div class="tema-box">
+        <span class="tema-icon">💬</span>
+        <p class="tema-title">Riflessione guidata</p>
+        <p class="tema-body">Questionario e attività di riflessione per connettere i contenuti all'esperienza quotidiana degli studenti.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <p class="section-label">Risultati</p>
+    <h2 class="section-title">Competenze acquisite</h2>
+    <div class="section-body">
+      <p>L'esperienza mi ha consentito di approfondire alcune tematiche legate alla sostenibilità ambientale e all'educazione alimentare, sviluppando una maggiore attenzione verso le conseguenze delle scelte individuali sul territorio e sulla società. Ho inoltre acquisito una conoscenza generale del settore agrario e delle sue applicazioni nel mondo contemporaneo.</p>
+      <p>Dal punto di vista orientativo, l'attività mi ha permesso di conoscere percorsi universitari diversi da quelli abitualmente approfonditi durante il percorso scolastico, ampliando la mia visione delle opportunità formative disponibili dopo il diploma.</p>
+    </div>
+    <div class="pills">
+      <span class="pill">Sostenibilità ambientale</span>
+      <span class="pill">Educazione alimentare</span>
+      <span class="pill">Pensiero critico</span>
+      <span class="pill">Consapevolezza civica</span>
+      <span class="pill">Orientamento universitario</span>
+      <span class="pill">Riflessione guidata</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <p class="section-label">Valutazione</p>
+    <h2 class="section-title">Aspetti positivi e criticità</h2>
+    <div class="procon">
+      <div class="procon-box pro">
+        <p class="procon-head">Punti di forza</p>
+        <p class="procon-body">La capacità di collegare argomenti scientifici e ambientali a problematiche concrete e attuali ha reso i contenuti accessibili e vicini all'esperienza quotidiana degli studenti. L'attività ha inoltre rappresentato un'occasione utile di orientamento universitario, permettendo di entrare in contatto con il mondo accademico.</p>
+      </div>
+      <div class="procon-box con">
+        <p class="procon-head">Criticità</p>
+        <p class="procon-body">La durata limitata dell'esperienza — un singolo incontro di poche ore — non ha consentito di approfondire in modo dettagliato tutti gli argomenti affrontati. Una maggiore disponibilità di tempo avrebbe permesso attività laboratoriali o momenti di confronto più approfonditi con i relatori.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer-back">
+    <a href="index.html#attivita">← Torna alla home</a>
+    <span class="footer-copy">Onofrio · Percorso PCTO</span>
+  </footer>
+
+  <script>
+    const cursor = document.querySelector('.custom-cursor');
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('click', (e) => {
+      const ripple = document.createElement('div');
+      ripple.className = 'cursor-ripple';
+      ripple.style.left = e.clientX + 'px';
+      ripple.style.top = e.clientY + 'px';
+      document.body.appendChild(ripple);
+      
+      cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
+      setTimeout(() => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+      }, 90);
+
+      ripple.addEventListener('animationend', () => {
+        ripple.remove();
+      });
+    });
+
+    const interactiveElements = document.querySelectorAll('a, button, .interactive-hover, .pill');
+    
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+    // ── PARALLAX HERO VIDEO ──
+    const heroVideo = document.querySelector('.hero-video');
+    const PARALLAX_SPEED = 0.35; // 0 = si muove con la pagina, 1 = completamente fisso
+
+    window.addEventListener('scroll', () => {
+      heroVideo.style.transform = `translateY(${window.scrollY * PARALLAX_SPEED}px)`;
+    }, { passive: true });
+  </script>
+  </script>
+</body>
+</html>
