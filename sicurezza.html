@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sicurezza sul Lavoro - Tomasicchio Onofrio</title>
+  <link href="https://fonts.cdnfonts.com/css/codec-pro" rel="stylesheet" />
+  <style>
+    :root {
+      --dark:  #0a1622;
+      --white: #ffffff;
+      --gold:  #DBBD6F;
+      --gold-dim: rgba(219,189,111,0.12);
+      --nav-blur: blur(18px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    /* ── CURSORE PERSONALIZZATO ── */
+    body, a, button, .interactive-hover { cursor: none; }
+
+    .custom-cursor {
+      position: fixed; top: 0; left: 0; width: 10px; height: 10px;
+      background-color: var(--gold); border-radius: 50%;
+      pointer-events: none; z-index: 10000; transform: translate(-50%, -50%);
+      transition: width 0.25s cubic-bezier(0.25, 1, 0.5, 1), height 0.25s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease, border 0.25s ease;
+    }
+
+    .custom-cursor.hover {
+      width: 45px; height: 45px;
+      background-color: rgba(219, 189, 111, 0.1);
+      border: 1px solid var(--gold);
+    }
+
+    .cursor-ripple {
+      position: fixed; width: 6px; height: 6px; background: transparent;
+      border: 2px solid var(--gold); border-radius: 50%;
+      pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+      animation: ripple-expansion 0.45s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    }
+
+    @keyframes ripple-expansion {
+      0% { width: 6px; height: 6px; opacity: 1; border-width: 2px; }
+      100% { width: 65px; height: 65px; opacity: 0; border-width: 1px; }
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .custom-cursor { display: none; }
+      body, a, button, .interactive-hover { cursor: auto; }
+    }
+
+    body {
+      font-family: 'Codec Pro', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── RESTO DELLO STILE ORIGINALE ── */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 200;
+      padding: 22px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: var(--nav-blur); -webkit-backdrop-filter: var(--nav-blur);
+      background: rgba(10,22,34,0.72);
+    }    :root {
+      --dark:  #0a1622;
+      --white: #ffffff;
+      --gold:  #DBBD6F;
+      --gold-dim: rgba(219,189,111,0.12);
+      --nav-blur: blur(18px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Codec Pro', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 200;
+      padding: 22px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: var(--nav-blur); -webkit-backdrop-filter: var(--nav-blur);
+      background: rgba(10,22,34,0.72);
+    }
+    .nav-back {
+      color: var(--gold); text-decoration: none;
+      font-size: clamp(10px,0.85vw,14px); font-weight: 600;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 8px;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 0.7; }
+    .nav-title {
+      font-size: clamp(10px,0.85vw,14px); font-weight: 600;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--white); opacity: 0.45;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: clamp(80px,10vw,160px) clamp(30px,6vw,120px) clamp(60px,7vw,110px);
+    }
+    .hero-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 130%;
+      object-fit: cover;
+      z-index: 0;
+      top: -15%;
+      will-change: transform;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: rgba(10,22,34,0.62);
+      z-index: 1;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: clamp(30px,6vw,120px);
+      width: 1px; height: 38%;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+      z-index: 2;
+    }
+    .hero-content { position: relative; z-index: 3; }
+
+    .hero-eyebrow {
+      font-size: clamp(11px,0.85vw,14px); font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: clamp(18px,2vw,32px);
+      opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
+    }
+    .hero-title {
+      font-size: clamp(40px,6vw,110px); font-weight: 700;
+      line-height: 1.0; letter-spacing: -0.02em;
+      color: var(--white); max-width: 16ch;
+      opacity: 0; animation: fadeUp 0.7s 0.4s forwards;
+    }
+    .hero-title em { font-style: normal; color: var(--gold); }
+    .hero-sub {
+      margin-top: clamp(24px,2.5vw,40px);
+      font-size: clamp(13px,1vw,18px); line-height: 1.75;
+      color: rgba(255,255,255,0.72); max-width: 58ch;
+      opacity: 0; animation: fadeUp 0.7s 0.6s forwards;
+    }
+    .hero-stats {
+      display: flex; gap: clamp(30px,4vw,70px);
+      margin-top: clamp(36px,4vw,64px);
+      opacity: 0; animation: fadeUp 0.7s 0.8s forwards;
+    }
+    .stat { display: flex; flex-direction: column; gap: 4px; }
+    .stat-num {
+      font-size: clamp(28px,3vw,52px); font-weight: 700;
+      color: var(--gold); letter-spacing: -0.02em; line-height: 1;
+    }
+    .stat-label {
+      font-size: clamp(10px,0.75vw,13px); letter-spacing: 0.15em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: clamp(30px,4vw,80px); height: 1px;
+      background: var(--gold); opacity: 0.4;
+      margin: clamp(50px,7vw,110px) clamp(30px,6vw,120px) 0;
+    }
+
+    /* ── SECTIONS ── */
+    .section { padding: clamp(50px,6vw,100px) clamp(30px,6vw,120px); }
+    .section-label {
+      font-size: clamp(10px,0.78vw,13px); font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: clamp(20px,2.5vw,40px);
+    }
+    .section-title {
+      font-size: clamp(24px,2.8vw,52px); font-weight: 700;
+      letter-spacing: -0.01em; line-height: 1.1;
+      color: var(--white); margin-bottom: clamp(24px,2.5vw,44px);
+    }
+    .section-body {
+      font-size: clamp(14px,1.05vw,20px); line-height: 1.85;
+      color: rgba(255,255,255,0.72); max-width: 72ch;
+    }
+    .section-body p + p { margin-top: clamp(14px,1.5vw,24px); }
+
+    /* two-col */
+    .two-col {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(40px,5vw,100px); align-items: start;
+    }
+
+    /* image slot */
+    .img-slot {
+      width: 100%; aspect-ratio: 4/3;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .img-slot img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+    /* gold blockquote */
+    .gold-quote {
+      border-left: 3px solid var(--gold);
+      padding: clamp(16px,2vw,28px) clamp(20px,2.5vw,40px);
+      margin: clamp(30px,3.5vw,56px) 0;
+      background: var(--gold-dim);
+      border-radius: 0 4px 4px 0;
+      font-size: clamp(15px,1.15vw,22px); line-height: 1.7;
+      color: rgba(255,255,255,0.85); font-style: italic;
+    }
+
+    /* pills */
+    .pills {
+      display: flex; flex-wrap: wrap; gap: clamp(8px,1vw,14px);
+      margin-top: clamp(20px,2.5vw,36px);
+    }
+    .pill {
+      padding: clamp(6px,0.6vw,10px) clamp(14px,1.4vw,24px);
+      border: 1px solid rgba(219,189,111,0.45); border-radius: 999px;
+      font-size: clamp(11px,0.78vw,14px); font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--gold); background: transparent;
+      transition: background 0.2s, color 0.2s;
+    }
+    .pill:hover { background: var(--gold); color: var(--dark); }
+
+    /* ── MODULI GRID ── */
+    .moduli-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(14px,1.8vw,26px);
+      margin-top: clamp(24px,2.5vw,44px);
+    }
+    .modulo-card {
+      padding: clamp(18px,2vw,34px);
+      border: 1px solid rgba(219,189,111,0.18);
+      border-radius: 4px;
+      background: rgba(219,189,111,0.04);
+      display: flex; gap: clamp(14px,1.4vw,24px); align-items: flex-start;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .modulo-card:hover {
+      background: rgba(219,189,111,0.09);
+      border-color: rgba(219,189,111,0.4);
+    }
+    .modulo-num {
+      font-size: clamp(28px,2.5vw,44px); font-weight: 700;
+      color: var(--gold); opacity: 0.35; line-height: 1;
+      flex-shrink: 0; min-width: 2ch;
+    }
+    .modulo-title {
+      font-size: clamp(13px,1vw,18px); font-weight: 700;
+      color: var(--white); margin-bottom: 6px; line-height: 1.2;
+    }
+    .modulo-desc {
+      font-size: clamp(12px,0.88vw,16px); line-height: 1.7;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* credito badge */
+    .credito-badge {
+      display: inline-flex; align-items: center; gap: 12px;
+      margin-top: clamp(24px,2.5vw,40px);
+      padding: clamp(14px,1.4vw,24px) clamp(20px,2vw,36px);
+      border: 1px solid rgba(219,189,111,0.5);
+      border-radius: 4px;
+      background: rgba(219,189,111,0.08);
+    }
+    .credito-icon {
+      font-size: clamp(22px,2vw,34px);
+    }
+    .credito-text {
+      font-size: clamp(13px,1vw,18px); font-weight: 600;
+      color: var(--white); line-height: 1.4;
+    }
+    .credito-text span {
+      display: block;
+      font-size: clamp(10px,0.75vw,13px); font-weight: 400;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 2px;
+    }
+
+    /* footer */
+    .footer-back {
+      padding: clamp(50px,6vw,100px) clamp(30px,6vw,120px);
+      border-top: 1px solid rgba(219,189,111,0.15);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-back a {
+      color: var(--gold); text-decoration: none;
+      font-size: clamp(11px,0.85vw,15px); font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 10px;
+      transition: opacity 0.2s;
+    }
+    .footer-back a:hover { opacity: 0.7; }
+    .footer-copy {
+      font-size: clamp(10px,0.75vw,13px); letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.2); text-transform: uppercase;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 860px) {
+      .two-col, .moduli-grid { grid-template-columns: 1fr; }
+      nav { padding: 18px 20px; }
+      .hero { padding: 100px 24px 60px; }
+      .hero::before { left: 24px; }
+      .section { padding: 50px 24px; }
+      .divider { margin-left: 24px; margin-right: 24px; }
+      .footer-back { padding: 50px 24px; flex-direction: column; gap: 20px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="custom-cursor"></div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a class="nav-back" href="index.html#attivita">← Torna alla home</a>
+    <span class="nav-title">Sicurezza sul Lavoro</span>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <video class="hero-video" src="VIDEO_SICUREZZA.mp4" autoplay muted loop playsinline></video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Attività PCTO · Novembre 2023</p>
+      <h1 class="hero-title">Sicurezza sul <em>Lavoro</em></h1>
+      <p class="hero-sub">Formazione obbligatoria in materia di salute e sicurezza nei luoghi di lavoro, realizzata in collaborazione tra MIUR e INAIL attraverso un percorso e-learning strutturato in sette moduli.</p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">4</span><span class="stat-label">Ore</span></div>
+        <div class="stat"><span class="stat-num">7</span><span class="stat-label">Moduli</span></div>
+        <div class="stat"><span class="stat-num">INAIL</span><span class="stat-label">Ente</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- IL CORSO -->
+  <section class="section">
+    <p class="section-label">Il corso</p>
+    <h2 class="section-title">Corso di formazione sulla sicurezza sul lavoro</h2>
+    <div class="two-col">
+      <div class="section-body">
+        <p>Il corso di formazione generale in materia di salute e sicurezza sui luoghi di lavoro è stato svolto nell'ambito dei percorsi PCTO, come previsto dal D. Lgs. 81/08 e successive modifiche. L'attività rientra nella formazione obbligatoria destinata agli studenti impegnati in esperienze di alternanza scuola-lavoro e ha l'obiettivo di fornire le conoscenze di base necessarie per operare in contesti lavorativi in condizioni di sicurezza.</p>
+        <p>Il percorso formativo, realizzato in collaborazione tra il MIUR e INAIL, dal titolo <em style="color:var(--white);font-style:normal;">"Studiare il lavoro – La tutela della salute e della sicurezza per gli studenti lavoratori in Alternanza Scuola Lavoro. Formazione al Futuro"</em>, si è svolto in modalità e-learning.</p>
+        <p>Il corso era articolato in sette moduli, comprensivi di lezioni multimediali, video, esercitazioni interattive e test intermedi, con una verifica finale conclusiva.</p>
+      </div>
+      <div class="img-slot">
+        <video src="VIDEO_ALIMENTAZIONE.mp4" autoplay muted loop playsinline alt="Sicurezza sul Lavoro">
+      </div>
+    </div>
+
+    <blockquote class="gold-quote" style="max-width: 72ch; margin-top: clamp(30px,3.5vw,56px);">
+      "Particolare attenzione è stata dedicata al concetto di rischio e alla necessità di adottare comportamenti consapevoli per tutelare la propria incolumità e quella degli altri."
+    </blockquote>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- I MODULI -->
+  <section class="section">
+    <p class="section-label">Struttura del percorso</p>
+    <h2 class="section-title">I sette moduli</h2>
+    <div class="moduli-grid">
+      <div class="modulo-card">
+        <div class="modulo-num">01</div>
+        <div class="modulo-text">
+          <p class="modulo-title">Concetti di rischio e prevenzione</p>
+          <p class="modulo-desc">Introduzione ai fondamenti della sicurezza: definizione di rischio, pericolo e danno. Principi generali di prevenzione nei luoghi di lavoro.</p>
+        </div>
+      </div>
+      <div class="modulo-card">
+        <div class="modulo-num">02</div>
+        <div class="modulo-text">
+          <p class="modulo-title">Organizzazione della sicurezza</p>
+          <p class="modulo-desc">Le figure responsabili della gestione della sicurezza: datore di lavoro, RSPP, RLS, preposto e lavoratore. Ruoli e responsabilità.</p>
+        </div>
+      </div>
+      <div class="modulo-card">
+        <div class="modulo-num">03</div>
+        <div class="modulo-text">
+          <p class="modulo-title">Diritti e doveri dei lavoratori</p>
+          <p class="modulo-desc">I principali diritti e obblighi previsti dalla normativa vigente (D. Lgs. 81/08). La partecipazione attiva alla sicurezza come responsabilità condivisa.</p>
+        </div>
+      </div>
+      <div class="modulo-card">
+        <div class="modulo-num">04</div>
+        <div class="modulo-text">
+          <p class="modulo-title">Misure di sicurezza</p>
+          <p class="modulo-desc">Dispositivi di protezione individuale e collettiva. Procedure di sicurezza e comportamenti corretti da adottare nei contesti lavorativi.</p>
+        </div>
+      </div>
+      <div class="modulo-card">
+        <div class="modulo-num">05</div>
+        <div class="modulo-text">
+          <p class="modulo-title">Rischi negli ambienti di lavoro</p>
+          <p class="modulo-desc">Principali categorie di rischio: fisici, chimici, biologici ed ergonomici. Metodi di valutazione e gestione dei rischi specifici.</p>
+        </div>
+      </div>
+      <div class="modulo-card">
+        <div class="modulo-num">06</div>
+        <div class="modulo-text">
+          <p class="modulo-title">Emergenze e primo soccorso</p>
+          <p class="modulo-desc">Procedure da seguire in caso di emergenza, evacuazione e infortuni. Nozioni di base sul primo soccorso e sulla segnaletica di sicurezza.</p>
+        </div>
+      </div>
+      <div class="modulo-card" style="grid-column: 1 / -1; max-width: calc(50% - clamp(7px,0.9vw,13px));">
+        <div class="modulo-num">07</div>
+        <div class="modulo-text">
+          <p class="modulo-title">Verifica finale</p>
+          <p class="modulo-desc">Test conclusivo di valutazione delle conoscenze acquisite durante il percorso. Il superamento della verifica ha consentito il conseguimento del credito formativo permanente.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="credito-badge">
+      <span class="credito-icon">🏅</span>
+      <div class="credito-text">
+        <span>Credito conseguito</span>
+        Credito formativo permanente · spendibile nel corso della vita lavorativa
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- COMPETENZE -->
+  <section class="section">
+    <p class="section-label">Risultati</p>
+    <h2 class="section-title">Competenze acquisite</h2>
+    <div class="section-body">
+      <p>Il corso ha rappresentato un primo approccio alla cultura della sicurezza nei contesti professionali, fornendo competenze di base valide in qualsiasi ambito lavorativo. Ho acquisito consapevolezza dei principi di prevenzione, dei diritti e doveri del lavoratore e delle procedure da seguire per garantire un ambiente di lavoro sicuro.</p>
+    </div>
+    <div class="pills">
+      <span class="pill">Prevenzione dei rischi</span>
+      <span class="pill">D. Lgs. 81/08</span>
+      <span class="pill">DPI</span>
+      <span class="pill">Primo soccorso</span>
+      <span class="pill">Gestione emergenze</span>
+      <span class="pill">Cultura della sicurezza</span>
+      <span class="pill">Responsabilità lavorativa</span>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer-back">
+    <a href="index.html#attivita">← Torna alla home</a>
+    <span class="footer-copy">Onofrio · Percorso PCTO</span>
+  </footer>
+
+  <script>
+    const cursor = document.querySelector('.custom-cursor');
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('click', (e) => {
+      const ripple = document.createElement('div');
+      ripple.className = 'cursor-ripple';
+      ripple.style.left = e.clientX + 'px';
+      ripple.style.top = e.clientY + 'px';
+      document.body.appendChild(ripple);
+      
+      cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
+      setTimeout(() => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+      }, 90);
+
+      ripple.addEventListener('animationend', () => {
+        ripple.remove();
+      });
+    });
+
+    const interactiveElements = document.querySelectorAll('a, button, .interactive-hover, .pill');
+    
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+    // ── PARALLAX HERO VIDEO ──
+    const heroVideo = document.querySelector('.hero-video');
+    const PARALLAX_SPEED = 0.35; // 0 = si muove con la pagina, 1 = completamente fisso
+
+    window.addEventListener('scroll', () => {
+      heroVideo.style.transform = `translateY(${window.scrollY * PARALLAX_SPEED}px)`;
+    }, { passive: true });
+  </script>
+  </script>
+</body>
+</html>
